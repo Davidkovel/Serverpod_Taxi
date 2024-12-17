@@ -1,0 +1,56 @@
+version: '3.7'
+
+services:
+  # Development services
+  postgres:
+    image: postgres:16.3
+    ports:
+      - '8090:5432'
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_DB: taxi_app
+      POSTGRES_PASSWORD: "PyO3Sgr-lXYfbbT0IsDCPNd1silq1yQ_"
+    volumes:
+      - taxi_app_data:/var/lib/postgresql/data
+    profiles:
+      - '' # Default profile
+      - dev
+  redis:
+    image: redis:6.2.6
+    ports:
+      - '8091:6379'
+    command: redis-server --requirepass "SiGpAqkvIqhEVdT8koKr6R9THmU9YZoZ"
+    environment:
+      - REDIS_REPLICATION_MODE=master
+    profiles:
+      - '' # Default profile
+      - dev
+
+  # Test services
+  postgres_test:
+    image: postgres:16.3
+    ports:
+      - '9090:5432'
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_DB: taxi_app_test
+      POSTGRES_PASSWORD: "yDUb7_vAzKdNENOW_r6hRRJ43svnOtVy"
+    volumes:
+      - taxi_app_test_data:/var/lib/postgresql/data
+    profiles:
+      - '' # Default profile
+      - test
+  redis_test:
+    image: redis:6.2.6
+    ports:
+      - '9091:6379'
+    command: redis-server --requirepass "rc-FE3Shiswu4x7npm4yKJoHVgPBhEd4"
+    environment:
+      - REDIS_REPLICATION_MODE=master
+    profiles:
+      - '' # Default profile
+      - test
+
+volumes:
+  taxi_app_data:
+  taxi_app_test_data:
