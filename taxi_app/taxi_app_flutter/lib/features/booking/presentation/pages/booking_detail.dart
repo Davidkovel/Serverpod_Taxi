@@ -24,7 +24,9 @@ class BookingDetail extends StatefulWidget {
 }
 
 class _BookingDetailState extends State<BookingDetail> {
+  Map<String, String> user_choice_cities = {"From": "None", "To": "None"};
   MenuItem? selectedMenu;
+  MenuItem? selectedMenu2;
   List<MenuItem> menuItems = [];
   List<MenuItem> filteredMenuItems = [];
 
@@ -35,6 +37,42 @@ class _BookingDetailState extends State<BookingDetail> {
     // For example:
     // cities = await retrieveCitiesUseCase.call(NoParams());
     // filteredCities = cities;
+  }
+
+    void showBookingDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Confirm Booking'),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text('From: ${user_choice_cities["From"]}'),
+              Text('To: ${user_choice_cities["To"]}'),
+              const SizedBox(height: 16),
+              Text('Cost: \$20.00'), // Example cost, you can calculate based on distance or other factors
+            ],
+          ),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: const Text('Cancel'),
+            ),
+            ElevatedButton(
+              onPressed: () {
+                // Handle booking confirmation
+                Navigator.of(context).pop();
+                print('Booking confirmed');
+              },
+              child: const Text('Confirm'),
+            ),
+          ],
+        );
+      },
+    );
   }
 
   void filterMenuItems(String query) {
@@ -89,13 +127,14 @@ class _BookingDetailState extends State<BookingDetail> {
                     child: DropdownMenu<MenuItem>(
                       initialSelection: selectedMenu,
                       width: MediaQuery.of(context).size.width * 0.8,
-                      hintText: "Select City",
+                      hintText: "Select From City",
                       requestFocusOnTap: true,
                       enableFilter: true,
-                      label: const Text('Select City'),
+                      label: const Text('Select From City'),
                       onSelected: (MenuItem? menu) {
                         setState(() {
                           selectedMenu = menu;
+                          user_choice_cities["From"] = menu!.label;
                         });
                       },
                       dropdownMenuEntries: filteredMenuItems.map<DropdownMenuEntry<MenuItem>>((MenuItem menu) {
@@ -105,6 +144,49 @@ class _BookingDetailState extends State<BookingDetail> {
                           leadingIcon: Icon(menu.icon),
                         );
                       }).toList(),
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.all(16.0),
+                    child: DropdownMenu<MenuItem>(
+                      initialSelection: selectedMenu2,
+                      width: MediaQuery.of(context).size.width * 0.8,
+                      hintText: "Select To City",
+                      requestFocusOnTap: true,
+                      enableFilter: true,
+                      label: const Text('Select To City'),
+                      onSelected: (MenuItem? menu) {
+                        setState(() {
+                          selectedMenu2 = menu;
+                          user_choice_cities["To"] = menu!.label;
+                        });
+                      },
+                      dropdownMenuEntries: filteredMenuItems.map<DropdownMenuEntry<MenuItem>>((MenuItem menu) {
+                        return DropdownMenuEntry<MenuItem>(
+                          value: menu,
+                          label: menu.label,
+                          leadingIcon: Icon(menu.icon),
+                        );
+                      }).toList(),
+                    ),
+                  ),
+                  Padding(
+                    padding: EdgeInsets.all(16),
+                    child: ElevatedButton(
+                      onPressed: () {
+                        // Обработка выбора города
+                        print(user_choice_cities);
+                      },
+                      child: const Text('Book Taxi'),
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.all(16.0),
+                    child: ElevatedButton(
+                      onPressed: () {
+                        showBookingDialog(context);
+                      },
+                      child: const Text('Book Taxi'),
                     ),
                   ),
                 ],
@@ -120,66 +202,3 @@ class _BookingDetailState extends State<BookingDetail> {
     );
   }
 }
-
-
-
-
-/*import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:taxi_app_flutter/dependencies.dart';
-import 'package:taxi_app_flutter/features/booking/domain/usecases/retrieve_cities.dart';
-
-import 'package:taxi_app_flutter/features/booking/presentation/bloc/booking_detail/booking_detail_block.dart';
-import '../bloc/booking_detail/booking_detail_event.dart';
-import '../bloc/booking_detail/booking_detail_state.dart';
-
-class BookingDetail extends StatelessWidget {
-  static String route() => "/booking_detail";
-
-  const BookingDetail({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return BlocProvider<BookingDetailBloc>(
-      create: (context) => serviceLocator<BookingDetailBloc>()..add(FetchBookingDetailsEvent()),
-      child: Scaffold(
-        appBar: AppBar(
-          title: const Text("Booking Detail"),
-        ),
-        body: BlocBuilder<BookingDetailBloc, BookingDetailState>(
-          builder: (context, state) { 
-            if (state is BookingDetailLoading) {
-              return const Center(child: CircularProgressIndicator());
-            } else if (state is BookingDetailSuccess) {
-              return Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  const Padding(
-                    padding: EdgeInsets.all(16.0),
-                    child: Text(
-                      "Select City:",
-                      style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-                    ),
-                  ),
-                  ...state.message.map(
-                    (city) => ListTile(
-                      title: Text(city),
-                      onTap: () {
-                        // Обработка выбора города
-                      },
-                    ),
-                  ),
-                ],
-              );
-            } else if (state is BookingDetailFailure) {
-              return Center(child: Text(state.message));
-            }
-
-            return const Center(child: Text("No Data Available"));
-          },
-        ),
-      ),
-    );
-  }
-}
-*/
