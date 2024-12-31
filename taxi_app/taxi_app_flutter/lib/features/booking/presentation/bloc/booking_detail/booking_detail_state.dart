@@ -5,9 +5,10 @@ class BookingDetailStateInitial extends BookingDetailState {}
 class BookingDetailStateLoading extends BookingDetailState {}
 
 class BookingDetailStateSuccess extends BookingDetailState {
-  final List<String> message;
+  final List<String>? cities;
+  final double? price;
 
-  BookingDetailStateSuccess(this.message);
+  BookingDetailStateSuccess({this.cities, this.price});
 }
 
 class BookingDetailStateFailure extends BookingDetailState {

@@ -24,14 +24,9 @@ class BookingButton extends StatelessWidget {
           {
             Navigator.push(
               context,
-              MaterialPageRoute(
-                builder: (context) => BlocProvider(
-                  create: (context) => serviceLocator<BookingDetailBloc>()
-                    ..add(FetchBookingDetailsEvent()),
-                  child: const BookingDetail(),
-                ),
-              ),
+              MaterialPageRoute(builder: (context) => BookingDetail()),
             );
+            
           } 
           , child: Text("Click To book Taxi")),
       ),

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:taxi_app_flutter/dependencies.dart';
 import 'package:taxi_app_flutter/features/booking/domain/usecases/retrieve_cities.dart';
+import 'package:taxi_app_flutter/features/booking/domain/usecases/calculating_price.dart';
 import 'package:taxi_app_flutter/features/booking/presentation/bloc/booking_detail/booking_detail_block.dart';
 import '../bloc/booking_detail/booking_detail_event.dart';
 import '../bloc/booking_detail/booking_detail_state.dart';
@@ -29,6 +30,7 @@ class _BookingDetailState extends State<BookingDetail> {
   MenuItem? selectedMenu2;
   List<MenuItem> menuItems = [];
   List<MenuItem> filteredMenuItems = [];
+  double? calculatedPrice;
 
   @override
   void initState() {
@@ -39,7 +41,12 @@ class _BookingDetailState extends State<BookingDetail> {
     // filteredCities = cities;
   }
 
-    void showBookingDialog(BuildContext context) {
+  @override
+  void dispose() {
+    super.dispose();
+  }
+
+    void showBookingDialog(BuildContext context, double totalPrice) {
     showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -51,7 +58,7 @@ class _BookingDetailState extends State<BookingDetail> {
               Text('From: ${user_choice_cities["From"]}'),
               Text('To: ${user_choice_cities["To"]}'),
               const SizedBox(height: 16),
-              Text('Cost: \$20.00'), // Example cost, you can calculate based on distance or other factors
+              Text('Cost: \$${totalPrice.toStringAsFixed(2)}'), // Example cost, you can calculate based on distance or other factors
             ],
           ),
           actions: [
@@ -63,7 +70,6 @@ class _BookingDetailState extends State<BookingDetail> {
             ),
             ElevatedButton(
               onPressed: () {
-                // Handle booking confirmation
                 Navigator.of(context).pop();
                 print('Booking confirmed');
               },
@@ -71,6 +77,27 @@ class _BookingDetailState extends State<BookingDetail> {
             ),
           ],
         );
+      },
+    );
+  }
+
+  Future<void> calculatePrice() async {
+    final calculatingPriceUseCase = serviceLocator<CalculatingPriceUseCase>();
+
+    final result = await calculatingPriceUseCase.call(
+      CalculatingPriceParams({
+        'From': user_choice_cities["From"]!,
+        'To': user_choice_cities["To"]!,
+      }),
+    );
+
+    result.fold(
+      (failure) => print('Error: ${failure.message}'),
+      (price) {
+        setState(() {
+          calculatedPrice = price;
+        });
+        showBookingDialog(context, price);
       },
     );
   }
@@ -97,8 +124,8 @@ class _BookingDetailState extends State<BookingDetail> {
               return const Center(child: CircularProgressIndicator());
             } else if (state is BookingDetailStateSuccess) {
               // Convert city names to MenuItem objects
-              menuItems = state.message
-                  .map((city) => MenuItem(state.message.indexOf(city), city, Icons.location_city))
+              menuItems = state.cities!
+                  .map((city) => MenuItem(state.cities!.indexOf(city), city, Icons.location_city))
                   .toList();
               filteredMenuItems = menuItems;
 
@@ -183,8 +210,8 @@ class _BookingDetailState extends State<BookingDetail> {
                   Padding(
                     padding: const EdgeInsets.all(16.0),
                     child: ElevatedButton(
-                      onPressed: () {
-                        showBookingDialog(context);
+                      onPressed: () async{
+                        await calculatePrice();
                       },
                       child: const Text('Book Taxi'),
                     ),
@@ -202,3 +229,8 @@ class _BookingDetailState extends State<BookingDetail> {
     );
   }
 }
+
+
+
+// LONG: ENTRY PRICE: // 
+// SHORT SL: 
