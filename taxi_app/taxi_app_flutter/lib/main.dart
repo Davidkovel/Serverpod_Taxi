@@ -3,7 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:taxi_app_flutter/features/booking/presentation/pages/booking_button.dart';
 
 import './dependencies.dart';
-import 'features/booking/presentation/bloc/booking_block.dart';
+import 'features/booking/presentation/bloc/booking_detail/booking_detail_block.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();

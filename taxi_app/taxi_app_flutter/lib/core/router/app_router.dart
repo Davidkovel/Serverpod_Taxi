@@ -4,7 +4,7 @@ import 'package:taxi_app_flutter/features/booking/presentation/pages/booking_but
 import 'package:taxi_app_flutter/features/booking/presentation/pages/booking_detail.dart';
 
 
-class AppRouter {
+/*class AppRouter {
   static GoRouter router = GoRouter(
     initialLocation: '/home',
     routes: [
@@ -18,4 +18,4 @@ class AppRouter {
       ),
     ],
   );
-}
+}*/
