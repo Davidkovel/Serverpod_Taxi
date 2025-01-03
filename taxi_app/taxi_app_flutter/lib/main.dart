@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:taxi_app_flutter/features/auth/presentation/bloc/auth_bloc.dart';
+import 'package:taxi_app_flutter/features/auth/presentation/bloc/auth_event.dart';
+import 'package:taxi_app_flutter/features/auth/presentation/pages/login_page.dart';
 import 'package:taxi_app_flutter/features/booking/presentation/pages/booking_button.dart';
 
 import './dependencies.dart';
@@ -14,6 +17,8 @@ void main() async {
         BlocProvider(
           create: (_) => serviceLocator<BookingDetailBloc>(),
         ),
+        BlocProvider(
+          create: (_) => serviceLocator<AuthBloc>()),
       ],
       child: const MyApp(),
     ),
@@ -28,7 +33,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Taxi App',
       theme: ThemeData(primarySwatch: Colors.blue),
-      home: const BookingButton(),
+      home: const LoginPage(),
     );
   }
 }
