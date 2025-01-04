@@ -1,0 +1,19 @@
+{
+  "moduleName": "taxi_app",
+  "tables": [],
+  "installedModules": [
+    {
+      "module": "serverpod",
+      "version": "20240516151843329"
+    },
+    {
+      "module": "serverpod_auth",
+      "version": "20240520102713718"
+    },
+    {
+      "module": "taxi_app",
+      "version": "20241217123458638"
+    }
+  ],
+  "migrationApiVersion": 1
+}
