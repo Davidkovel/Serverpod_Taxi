@@ -5,6 +5,8 @@ import 'package:taxi_app_flutter/features/auth/data/datasources/auth_datasource.
 import 'package:taxi_app_flutter/features/auth/data/repositories/auth_repository_impl.dart';
 import 'package:taxi_app_flutter/features/auth/domain/repositories/auth_repository.dart';
 import 'package:taxi_app_flutter/features/auth/domain/usecases/user_login.dart';
+import 'package:taxi_app_flutter/features/auth/domain/usecases/user_register.dart';
+import 'package:taxi_app_flutter/features/auth/domain/usecases/user_confirm_registration.dart';
 import 'package:taxi_app_flutter/features/auth/presentation/bloc/auth_bloc.dart';
 import 'package:taxi_app_flutter/features/booking/data/datasources/distance_datasource.dart';
 import 'package:taxi_app_flutter/features/booking/domain/usecases/retrieve_cities.dart';
@@ -53,9 +55,19 @@ void _initAuthFeature() {
     serviceLocator<AuthRepository>(),
   ));
 
+  serviceLocator.registerFactory<UserRegisterUseCase>(() => UserRegisterUseCase(
+    serviceLocator<AuthRepository>(),
+  ));
+
+  serviceLocator.registerFactory<UserConfirmRegistrationUseCase>(() => UserConfirmRegistrationUseCase(
+    serviceLocator<AuthRepository>(),
+  ));
+
   // Blocs
   serviceLocator.registerFactory<AuthBloc>(() => AuthBloc(
     userLogin: serviceLocator<UserLoginUseCase>(),
+    userRegister: serviceLocator<UserRegisterUseCase>(),
+    userConfirmRegistration: serviceLocator<UserConfirmRegistrationUseCase>(),
   ));
 }
 

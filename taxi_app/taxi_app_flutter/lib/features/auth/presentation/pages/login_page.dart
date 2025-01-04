@@ -6,6 +6,7 @@ import 'package:taxi_app_flutter/core/widgets/loader.dart';
 import 'package:taxi_app_flutter/features/auth/presentation/bloc/auth_bloc.dart';
 import 'package:taxi_app_flutter/features/auth/presentation/bloc/auth_event.dart';
 import 'package:taxi_app_flutter/features/auth/presentation/bloc/auth_state.dart';
+import 'package:taxi_app_flutter/features/auth/presentation/pages/register_page.dart';
 import 'package:taxi_app_flutter/features/booking/presentation/pages/booking_button.dart';
 
 
@@ -44,8 +45,7 @@ class _LoginPageState extends State<LoginPage> {
               );
             } 
             if (state is AuthStateSucess) {
-              print('object');
-              const BookingButton();
+              context.go(BookingButton.route());
             }
           },
           builder: (context, state) {
@@ -93,7 +93,7 @@ class _LoginPageState extends State<LoginPage> {
                   const SizedBox(height: 20,),
                   GestureDetector(
                     onTap: () {
-                      // TODO go to register page
+                      context.go(RegisterPage.route());
                     },
                     child: RichText(
                       text: TextSpan(text: "You Don\'t have an account? Register", style: const TextStyle(color: Colors.blue, fontSize: 16)),

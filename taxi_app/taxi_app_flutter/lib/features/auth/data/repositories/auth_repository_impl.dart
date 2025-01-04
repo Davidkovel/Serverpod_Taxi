@@ -21,5 +21,45 @@ class AuthRepositoryImpl implements AuthRepository {
       return Left(Failure(e.message));
     }
   }
+  
+  @override
+  Future<Either<Failure, bool>> registerWithEmailAndPassword({
+    required String email,
+    required String password,
+    required String username,
+  }) async {
+    try {
+      final success = await datasource.registerWithEmailAndPassword(
+        email: email,
+        password: password,
+        username: username,
+      );
+
+      if (success) {
+        return right(true);
+      }
+
+      return left(const Failure("Could not register"));
+    } on ServerException catch (e) {
+      return left(Failure(e.message));
+    }
+  }
+
+  @override
+  Future<Either<Failure, User>> confirmRegistration({
+    required String email,
+    required String verificationCode,
+  }) async {
+    try {
+      final user = await datasource.confirmRegistration(
+        email: email,
+        verificationCode: verificationCode,
+      );
+
+      return right(user);
+    } on ServerException catch (e) {
+      return left(Failure(e.message));
+    }
+  }
 
 }

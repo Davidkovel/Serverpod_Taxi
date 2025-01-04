@@ -1,14 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 import 'package:taxi_app_flutter/core/router/app_router.dart';
 import 'package:taxi_app_flutter/dependencies.dart';
+import 'package:taxi_app_flutter/features/auth/presentation/pages/register_confirmation_page.dart';
 
 import '../bloc/booking_detail/booking_detail_block.dart';
 import '../bloc/booking_detail/booking_detail_event.dart';
 import './booking_detail.dart';
 
 class BookingButton extends StatelessWidget {
-  // static String route() => "/booking_button";
+  static String route() => "/booking_button";
 
   const BookingButton({super.key});
 
@@ -22,10 +24,7 @@ class BookingButton extends StatelessWidget {
         child: ElevatedButton(
           onPressed : ()
           {
-            Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => BookingDetail()),
-            );
+            context.go(BookingDetail.route());
             
           } 
           , child: Text("Click To book Taxi")),
