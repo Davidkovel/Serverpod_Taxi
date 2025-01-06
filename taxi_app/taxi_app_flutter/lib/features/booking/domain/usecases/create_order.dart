@@ -4,10 +4,10 @@ import 'package:taxi_app_flutter/core/error/failure.dart';
 import 'package:taxi_app_flutter/core/usecases/usecase.dart';
 import 'package:taxi_app_flutter/features/booking/domain/repositories/book_repository.dart';
 
-class CreateOrder implements Usecase<void, OrderCreateParams> {
+class CreateOrderUseCase implements Usecase<void, OrderCreateParams> {
   final BookRepository bookRepository;
 
-  CreateOrder(this.bookRepository);
+  CreateOrderUseCase(this.bookRepository);
 
   @override
   Future<Either<Failure, void>> call(OrderCreateParams params) async {

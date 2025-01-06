@@ -1,14 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:go_router/go_router.dart';
-import 'package:taxi_app_flutter/core/router/app_router.dart';
+import 'package:taxi_app_client/taxi_app_client.dart';
 import 'package:taxi_app_flutter/core/utils/show_snackbar.dart';
-import 'package:taxi_app_flutter/dependencies.dart';
-import 'package:taxi_app_flutter/features/booking/domain/usecases/retrieve_cities.dart';
-import 'package:taxi_app_flutter/features/booking/domain/usecases/calculating_price.dart';
 import 'package:taxi_app_flutter/features/booking/presentation/bloc/booking_detail/booking_detail_block.dart';
 import '../bloc/booking_detail/booking_detail_event.dart';
 import '../bloc/booking_detail/booking_detail_state.dart';
+
 
 class MenuItem {
   final int id;
@@ -39,10 +36,6 @@ class _BookingDetailState extends State<BookingDetail> {
   void initState() {
     super.initState();
     BlocProvider.of<BookingDetailBloc>(context).add(FetchBookingDetailsEvent());
-    // Initialize menuItems and filteredMenuItems with the list of cities from your use case
-    // For example:
-    // cities = await retrieveCitiesUseCase.call(NoParams());
-    // filteredCities = cities;
   }
 
   @override
@@ -50,7 +43,22 @@ class _BookingDetailState extends State<BookingDetail> {
     super.dispose();
   }
 
-  void showBookingDialog(BuildContext context, double totalPrice) {
+  Future<int?> getUserId() async {
+    return 2;
+  }
+
+  void showBookingDialog(BuildContext context, double totalPrice) async {
+   var userId = await getUserId();
+   final order = Orders(
+      passengerId: userId!,
+      fromAddress: user_choice_cities["From"]!,
+      toAddress: user_choice_cities["To"]!,
+      status: 'Pending',
+      price: totalPrice.toInt(),
+    );
+
+    // Use the order variable
+    print(order);
     showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -74,7 +82,9 @@ class _BookingDetailState extends State<BookingDetail> {
             ),
             ElevatedButton(
               onPressed: () {
-                Navigator.of(context).pop();
+                context.read<BookingDetailBloc>().add(CreateOrderEvent(order));
+                //context.pop();
+                
                 print('Booking confirmed');
               },
               child: const Text('Confirm'),
@@ -98,6 +108,7 @@ class _BookingDetailState extends State<BookingDetail> {
     return BlocConsumer<BookingDetailBloc, BookingDetailState>(
       listener: (context, state) {
         if (state is BookingDetailStateFailure) {
+          print(state.message);
           showSnackbar(context, state.message);
         }
 
@@ -236,129 +247,3 @@ class _BookingDetailState extends State<BookingDetail> {
         );
       }
   }
-
-
-/*
- /**/
-
-
-// ---
-
-*/
-
-
- /*return BlocProvider<BookingDetailBloc>(
-      create: (context) => serviceLocator<BookingDetailBloc>()..add(FetchBookingDetailsEvent()),
-      child: Scaffold(
-        appBar: AppBar(
-          title: const Text("Booking Detail"),
-        ),
-        body: BlocBuilder<BookingDetailBloc, BookingDetailState>(
-          builder: (context, state) {
-            if (state is BookingDetailStateLoading) {
-              return const Center(child: CircularProgressIndicator());
-            } else if (state is BookingDetailStateSuccess) {
-              // Convert city names to MenuItem objects
-              menuItems = state.cities!
-                  .map((city) => MenuItem(state.cities!.indexOf(city), city, Icons.location_city))
-                  .toList();
-              filteredMenuItems = menuItems;
-
-              return Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  const Padding(
-                    padding: EdgeInsets.all(16.0),
-                    child: Text(
-                      "Select City:",
-                      style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.all(16.0),
-                    child: TextField(
-                      decoration: InputDecoration(
-                        labelText: 'Search City',
-                        border: OutlineInputBorder(),
-                      ),
-                      onChanged: filterMenuItems,
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.all(16.0),
-                    child: DropdownMenu<MenuItem>(
-                      initialSelection: selectedMenu,
-                      width: MediaQuery.of(context).size.width * 0.8,
-                      hintText: "Select From City",
-                      requestFocusOnTap: true,
-                      enableFilter: true,
-                      label: const Text('Select From City'),
-                      onSelected: (MenuItem? menu) {
-                        setState(() {
-                          selectedMenu = menu;
-                          user_choice_cities["From"] = menu!.label;
-                        });
-                      },
-                      dropdownMenuEntries: filteredMenuItems.map<DropdownMenuEntry<MenuItem>>((MenuItem menu) {
-                        return DropdownMenuEntry<MenuItem>(
-                          value: menu,
-                          label: menu.label,
-                          leadingIcon: Icon(menu.icon),
-                        );
-                      }).toList(),
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.all(16.0),
-                    child: DropdownMenu<MenuItem>(
-                      initialSelection: selectedMenu2,
-                      width: MediaQuery.of(context).size.width * 0.8,
-                      hintText: "Select To City",
-                      requestFocusOnTap: true,
-                      enableFilter: true,
-                      label: const Text('Select To City'),
-                      onSelected: (MenuItem? menu) {
-                        setState(() {
-                          selectedMenu2 = menu;
-                          user_choice_cities["To"] = menu!.label;
-                        });
-                      },
-                      dropdownMenuEntries: filteredMenuItems.map<DropdownMenuEntry<MenuItem>>((MenuItem menu) {
-                        return DropdownMenuEntry<MenuItem>(
-                          value: menu,
-                          label: menu.label,
-                          leadingIcon: Icon(menu.icon),
-                        );
-                      }).toList(),
-                    ),
-                  ),
-                  Padding(
-                    padding: EdgeInsets.all(16),
-                    child: ElevatedButton(
-                      onPressed: () {
-                        // Обработка выбора города
-                        print(user_choice_cities);
-                      },
-                      child: const Text('Book Taxi'),
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.all(16.0),
-                    child: ElevatedButton(
-                      onPressed: () async{
-                        await calculatePrice();
-                      },
-                      child: const Text('Book Taxi'),
-                    ),
-                  ),
-                ],
-              );
-            } else if (state is BookingDetailStateFailure) {
-              return Center(child: Text(state.message));
-            }
-
-            return const Center(child: Text("No Data Available"));
-          },
-        ),
-      ),
-    );*/

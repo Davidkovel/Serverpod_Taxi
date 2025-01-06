@@ -23,3 +23,5 @@ class CalculatePriceStateSuccess extends BookingDetailState {
 
   CalculatePriceStateSuccess({required this.price});
 }
+
+class CreateOrderStateSuccess extends BookingDetailState {}
