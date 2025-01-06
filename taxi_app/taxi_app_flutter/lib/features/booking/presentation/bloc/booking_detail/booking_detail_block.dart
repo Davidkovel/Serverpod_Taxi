@@ -32,7 +32,7 @@ class BookingDetailBloc extends Bloc<BookingDetailEvent, BookingDetailState> {
     print(result);
     result.fold(
       (failure) => emit(BookingDetailStateFailure(failure.message)),
-      (price) => emit(BookingDetailStateSuccess(price: price)),
+      (price) => emit(CalculatePriceStateSuccess(price: price)),
     );
   }
 }

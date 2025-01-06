@@ -29,7 +29,7 @@ class AppRouter {
       ),
       GoRoute(
         path: BookingDetail.route(),
-        builder: (context, _) => const BookingDetail(),
+        builder: (context, _) => BookingDetail(),
       ),
     ],
   );

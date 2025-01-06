@@ -16,3 +16,10 @@ class BookingDetailStateFailure extends BookingDetailState {
 
   BookingDetailStateFailure(this.message);
 }
+
+
+class CalculatePriceStateSuccess extends BookingDetailState {
+  final double price;
+
+  CalculatePriceStateSuccess({required this.price});
+}
