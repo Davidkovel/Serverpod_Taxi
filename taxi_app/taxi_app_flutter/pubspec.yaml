@@ -24,10 +24,10 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  serverpod_flutter: 2.2.2
+  serverpod_flutter: 2.3.0
   taxi_app_client:
     path: ../taxi_app_client
-  serverpod_auth_shared_flutter: 2.2.2
+  serverpod_auth_shared_flutter: 2.3.0
 
 
   # The following adds the Cupertino Icons font to your application.

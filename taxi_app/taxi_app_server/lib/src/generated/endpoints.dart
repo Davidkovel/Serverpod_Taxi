@@ -11,7 +11,9 @@
 // ignore_for_file: no_leading_underscores_for_library_prefixes
 import 'package:serverpod/serverpod.dart' as _i1;
 import '../endpoints/example_endpoint.dart' as _i2;
-import 'package:serverpod_auth_server/serverpod_auth_server.dart' as _i3;
+import '../endpoints/orders_endpoint.dart' as _i3;
+import 'package:taxi_app_server/src/generated/orders_model.dart' as _i4;
+import 'package:serverpod_auth_server/serverpod_auth_server.dart' as _i5;
 
 class Endpoints extends _i1.EndpointDispatch {
   @override
@@ -22,7 +24,13 @@ class Endpoints extends _i1.EndpointDispatch {
           server,
           'example',
           null,
-        )
+        ),
+      'orders': _i3.OrdersEndpoint()
+        ..initialize(
+          server,
+          'orders',
+          null,
+        ),
     };
     connectors['example'] = _i1.EndpointConnector(
       name: 'example',
@@ -48,6 +56,30 @@ class Endpoints extends _i1.EndpointDispatch {
         )
       },
     );
-    modules['serverpod_auth'] = _i3.Endpoints()..initializeEndpoints(server);
+    connectors['orders'] = _i1.EndpointConnector(
+      name: 'orders',
+      endpoint: endpoints['orders']!,
+      methodConnectors: {
+        'createOrder': _i1.MethodConnector(
+          name: 'createOrder',
+          params: {
+            'orders': _i1.ParameterDescription(
+              name: 'orders',
+              type: _i1.getType<_i4.Orders>(),
+              nullable: false,
+            )
+          },
+          call: (
+            _i1.Session session,
+            Map<String, dynamic> params,
+          ) async =>
+              (endpoints['orders'] as _i3.OrdersEndpoint).createOrder(
+            session,
+            params['orders'],
+          ),
+        )
+      },
+    );
+    modules['serverpod_auth'] = _i5.Endpoints()..initializeEndpoints(server);
   }
 }
