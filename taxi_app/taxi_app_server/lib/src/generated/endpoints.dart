@@ -77,7 +77,34 @@ class Endpoints extends _i1.EndpointDispatch {
             session,
             params['orders'],
           ),
-        )
+        ),
+        'listOrders': _i1.MethodConnector(
+          name: 'listOrders',
+          params: {},
+          call: (
+            _i1.Session session,
+            Map<String, dynamic> params,
+          ) async =>
+              (endpoints['orders'] as _i3.OrdersEndpoint).listOrders(session),
+        ),
+        'deleteOrder': _i1.MethodConnector(
+          name: 'deleteOrder',
+          params: {
+            'orderId': _i1.ParameterDescription(
+              name: 'orderId',
+              type: _i1.getType<int>(),
+              nullable: false,
+            )
+          },
+          call: (
+            _i1.Session session,
+            Map<String, dynamic> params,
+          ) async =>
+              (endpoints['orders'] as _i3.OrdersEndpoint).deleteOrder(
+            session,
+            params['orderId'],
+          ),
+        ),
       },
     );
     modules['serverpod_auth'] = _i5.Endpoints()..initializeEndpoints(server);

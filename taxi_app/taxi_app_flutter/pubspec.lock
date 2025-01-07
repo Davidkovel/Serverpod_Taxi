@@ -625,7 +625,7 @@ packages:
     source: hosted
     version: "2.3.0"
   serverpod_client:
-    dependency: "direct main"
+    dependency: transitive
     description:
       name: serverpod_client
       sha256: d5ca5bebb3812da1e55f09a4acb8b51c7559efc27342355b78fdae11b478141a

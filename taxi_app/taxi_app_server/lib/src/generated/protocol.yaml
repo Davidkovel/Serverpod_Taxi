@@ -2,3 +2,5 @@ example:
   - hello:
 orders:
   - createOrder:
+  - listOrders:
+  - deleteOrder:

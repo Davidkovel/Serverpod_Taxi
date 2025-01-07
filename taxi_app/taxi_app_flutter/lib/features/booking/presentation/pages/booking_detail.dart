@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 import 'package:taxi_app_client/taxi_app_client.dart';
+import 'package:taxi_app_flutter/core/router/app_router.dart';
 import 'package:taxi_app_flutter/core/utils/show_snackbar.dart';
 import 'package:taxi_app_flutter/features/booking/presentation/bloc/booking_detail/booking_detail_block.dart';
+import 'package:taxi_app_flutter/features/booking/presentation/pages/booking_button.dart';
 import '../bloc/booking_detail/booking_detail_event.dart';
 import '../bloc/booking_detail/booking_detail_state.dart';
 
@@ -83,6 +86,7 @@ class _BookingDetailState extends State<BookingDetail> {
             ElevatedButton(
               onPressed: () {
                 context.read<BookingDetailBloc>().add(CreateOrderEvent(order));
+                context.go(BookingButton.route());
                 //context.pop();
                 
                 print('Booking confirmed');
@@ -108,7 +112,6 @@ class _BookingDetailState extends State<BookingDetail> {
     return BlocConsumer<BookingDetailBloc, BookingDetailState>(
       listener: (context, state) {
         if (state is BookingDetailStateFailure) {
-          print(state.message);
           showSnackbar(context, state.message);
         }
 

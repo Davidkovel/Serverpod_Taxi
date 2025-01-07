@@ -42,6 +42,19 @@ class EndpointOrders extends _i1.EndpointRef {
         'createOrder',
         {'orders': orders},
       );
+
+  _i2.Future<List<_i3.Orders>> listOrders() =>
+      caller.callServerEndpoint<List<_i3.Orders>>(
+        'orders',
+        'listOrders',
+        {},
+      );
+
+  _i2.Future<void> deleteOrder(int orderId) => caller.callServerEndpoint<void>(
+        'orders',
+        'deleteOrder',
+        {'orderId': orderId},
+      );
 }
 
 class Modules {

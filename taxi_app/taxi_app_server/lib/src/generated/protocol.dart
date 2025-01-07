@@ -14,6 +14,7 @@ import 'package:serverpod/protocol.dart' as _i2;
 import 'package:serverpod_auth_server/serverpod_auth_server.dart' as _i3;
 import 'example.dart' as _i4;
 import 'orders_model.dart' as _i5;
+import 'package:taxi_app_server/src/generated/orders_model.dart' as _i6;
 export 'example.dart';
 export 'orders_model.dart';
 
@@ -119,6 +120,10 @@ class Protocol extends _i1.SerializationManagerServer {
     }
     if (t == _i1.getType<_i5.Orders?>()) {
       return (data != null ? _i5.Orders.fromJson(data) : null) as T;
+    }
+    if (t == List<_i6.Orders>) {
+      return (data as List).map((e) => deserialize<_i6.Orders>(e)).toList()
+          as dynamic;
     }
     try {
       return _i3.Protocol().deserialize<T>(data, t);

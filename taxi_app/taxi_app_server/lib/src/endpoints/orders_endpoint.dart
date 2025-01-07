@@ -14,4 +14,11 @@ class OrdersEndpoint extends Endpoint {
     await Orders.db.insert(session, [order]);
   }
 
+  Future<List<Orders>> listOrders(Session session) async {
+    return await Orders.db.find(session);
+  }
+
+  Future<void> deleteOrder(Session session, int orderId) async {
+    await Orders.db.deleteWhere(session, where: (row) => row.id.equals(orderId));
+  }
 }
