@@ -87,6 +87,7 @@ class AuthDatasourceImpl implements AuthDatasource {
         throw const ServerException("Id or Email was null");
       }
 
+      set_user_id(result.id!);
       return UserModel(id: result.id!, email: result.email!, username: result.userName!);
     }catch (e)
     {

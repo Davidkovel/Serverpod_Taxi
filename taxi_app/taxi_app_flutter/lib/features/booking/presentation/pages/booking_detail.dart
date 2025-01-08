@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:taxi_app_client/taxi_app_client.dart';
+import 'package:taxi_app_flutter/core/entities/user.dart';
 import 'package:taxi_app_flutter/core/router/app_router.dart';
 import 'package:taxi_app_flutter/core/utils/show_snackbar.dart';
 import 'package:taxi_app_flutter/core/widgets/style.dart';
@@ -47,7 +48,7 @@ class _BookingDetailState extends State<BookingDetail> {
   }
 
   Future<int?> getUserId() async {
-    return 2;
+    return get_user_id();
   }
 
   void showBookingDialog(BuildContext context, double totalPrice) async {
