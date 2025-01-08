@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:taxi_app_flutter/core/utils/show_snackbar.dart';
 import 'package:taxi_app_flutter/core/widgets/loader.dart';
+import 'package:taxi_app_flutter/core/widgets/style.dart';
 import 'package:taxi_app_flutter/features/auth/presentation/bloc/auth_bloc.dart';
 import 'package:taxi_app_flutter/features/auth/presentation/bloc/auth_event.dart';
 import 'package:taxi_app_flutter/features/auth/presentation/bloc/auth_state.dart';
@@ -38,13 +39,12 @@ class _RegisterPageState extends State<RegisterPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Padding(
-        padding: const EdgeInsets.all(15.0),
+        padding: const EdgeInsets.all(16.0),
         child: BlocConsumer<AuthBloc, AuthState>(
           listener: (context, state) {
             if (state is AuthStateFailure) {
               showSnackbar(context, state.message);
             } else if (state is AuthStateConfirmationRequired) {
-              print('Confirmation required');
               context.go(RegisterConfirmationPage.route());
             } else if (state is AuthStateSucess) {
               const BookingButton();
@@ -65,7 +65,7 @@ class _RegisterPageState extends State<RegisterPage> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   const Text(
-                    'Sign Up.',
+                    'Sign Up',
                     style: TextStyle(
                       fontSize: 50,
                       fontWeight: FontWeight.bold,
@@ -78,7 +78,7 @@ class _RegisterPageState extends State<RegisterPage> {
                       hintText: 'Email',
                     ),
                   ),
-                  const SizedBox(height: 30),
+                  const SizedBox(height: 15),
                   TextFormField(
                     controller: usernameController,
                     decoration: const InputDecoration(
@@ -120,7 +120,7 @@ class _RegisterPageState extends State<RegisterPage> {
                         children: [
                           TextSpan(
                             text: 'Sign In',
-                            style: Theme.of(context).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold, color: Colors.pink),
+                            style: Theme.of(context).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold, color: pink),
                           ),
                         ],
                       ),

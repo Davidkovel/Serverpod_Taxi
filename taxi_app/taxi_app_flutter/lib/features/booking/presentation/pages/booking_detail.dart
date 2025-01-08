@@ -4,11 +4,11 @@ import 'package:go_router/go_router.dart';
 import 'package:taxi_app_client/taxi_app_client.dart';
 import 'package:taxi_app_flutter/core/router/app_router.dart';
 import 'package:taxi_app_flutter/core/utils/show_snackbar.dart';
+import 'package:taxi_app_flutter/core/widgets/style.dart';
 import 'package:taxi_app_flutter/features/booking/presentation/bloc/booking_detail/booking_detail_block.dart';
 import 'package:taxi_app_flutter/features/booking/presentation/pages/booking_button.dart';
 import '../bloc/booking_detail/booking_detail_event.dart';
 import '../bloc/booking_detail/booking_detail_state.dart';
-
 
 class MenuItem {
   final int id;
@@ -51,8 +51,8 @@ class _BookingDetailState extends State<BookingDetail> {
   }
 
   void showBookingDialog(BuildContext context, double totalPrice) async {
-   var userId = await getUserId();
-   final order = Orders(
+    var userId = await getUserId();
+    final order = Orders(
       passengerId: userId!,
       fromAddress: user_choice_cities["From"]!,
       toAddress: user_choice_cities["To"]!,
@@ -60,8 +60,6 @@ class _BookingDetailState extends State<BookingDetail> {
       price: totalPrice.toInt(),
     );
 
-    // Use the order variable
-    print(order);
     showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -87,8 +85,7 @@ class _BookingDetailState extends State<BookingDetail> {
               onPressed: () {
                 context.read<BookingDetailBloc>().add(CreateOrderEvent(order));
                 context.go(BookingButton.route());
-                //context.pop();
-                
+
                 print('Booking confirmed');
               },
               child: const Text('Confirm'),
@@ -102,7 +99,8 @@ class _BookingDetailState extends State<BookingDetail> {
   void filterMenuItems(String query) {
     setState(() {
       filteredMenuItems = menuItems
-          .where((menuItem) => menuItem.label.toLowerCase().contains(query.toLowerCase()))
+          .where((menuItem) =>
+              menuItem.label.toLowerCase().contains(query.toLowerCase()))
           .toList();
     });
   }
@@ -123,49 +121,56 @@ class _BookingDetailState extends State<BookingDetail> {
       },
       builder: (context, state) {
         if (state is BookingDetailStateLoading) {
-              return const Center(child: CircularProgressIndicator());
-            } 
-            else if (state is BookingDetailStateInitial){
-              return const Scaffold(body: SizedBox());
-            }
-            else if (state is BookingDetailStateSuccess) {
-              return Scaffold(
-                appBar: AppBar(
-                  title: const Text("Booking Detail"),
-                ),
-                body: BlocBuilder<BookingDetailBloc, BookingDetailState>(
-                  builder: (context, state) {
-                    if (state is BookingDetailStateLoading) {
-                      return const Center(child: CircularProgressIndicator());
-                    } else if (state is BookingDetailStateSuccess) {
-                      // Convert city names to MenuItem objects
-                      menuItems = state.cities!
-                          .map((city) => MenuItem(state.cities!.indexOf(city), city, Icons.location_city))
-                          .toList();
-                      filteredMenuItems = menuItems;
+          return const Center(child: CircularProgressIndicator());
+        } else if (state is BookingDetailStateInitial) {
+          return const Scaffold(body: SizedBox());
+        } else if (state is BookingDetailStateSuccess) {
+          return Scaffold(
+            appBar: AppBar(
+              title: const Text("Booking Detail"),
+              leading: IconButton(
+                icon: const Icon(Icons.arrow_back),
+                onPressed: () {
+                  context.go(BookingButton.route());
+                },
+              ),
+            ),
+            body: BlocBuilder<BookingDetailBloc, BookingDetailState>(
+              builder: (context, state) {
+                if (state is BookingDetailStateLoading) {
+                  return const Center(child: CircularProgressIndicator());
+                } else if (state is BookingDetailStateSuccess) {
+                  // Convert city names to MenuItem objects
+                  menuItems = state.cities!
+                      .map((city) => MenuItem(state.cities!.indexOf(city), city,
+                          Icons.location_city))
+                      .toList();
+                  filteredMenuItems = menuItems;
 
-                      return Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          const Padding(
-                            padding: EdgeInsets.all(16.0),
-                            child: Text(
-                              "Select City:",
-                              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-                            ),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.all(16.0),
-                            child: TextField(
-                              decoration: InputDecoration(
-                                labelText: 'Search City',
-                                border: OutlineInputBorder(),
-                              ),
-                              onChanged: filterMenuItems,
-                            ),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.all(16.0),
+                  return Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      // Заголовок
+                      Padding(
+                        padding:
+                            EdgeInsets.only(left: 12, top: 12, bottom: 9.0),
+                        child: Text(
+                          "Select City:",
+                          style: TextStyle(
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold,
+                              color: blueGrey),
+                        ),
+                      ),
+                      // Выбор города "From"
+                      Padding(
+                        padding: const EdgeInsets.all(16.0),
+                        child: Card(
+                          elevation: 5,
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(12)),
+                          child: Padding(
+                            padding: const EdgeInsets.all(8.0),
                             child: DropdownMenu<MenuItem>(
                               initialSelection: selectedMenu,
                               width: MediaQuery.of(context).size.width * 0.8,
@@ -179,17 +184,36 @@ class _BookingDetailState extends State<BookingDetail> {
                                   user_choice_cities["From"] = menu!.label;
                                 });
                               },
-                              dropdownMenuEntries: filteredMenuItems.map<DropdownMenuEntry<MenuItem>>((MenuItem menu) {
+                              dropdownMenuEntries: filteredMenuItems
+                                  .map<DropdownMenuEntry<MenuItem>>(
+                                      (MenuItem menu) {
                                 return DropdownMenuEntry<MenuItem>(
                                   value: menu,
                                   label: menu.label,
-                                  leadingIcon: Icon(menu.icon),
+                                  leadingIcon:
+                                      Icon(menu.icon, color: blue),
                                 );
                               }).toList(),
                             ),
                           ),
-                          Padding(
-                            padding: const EdgeInsets.all(16.0),
+                        ),
+                      ),
+                      // Разделитель
+                      Divider(
+                        color: blueGrey,
+                        height: 2,
+                        indent: 16,
+                        endIndent: 16,
+                      ),
+                      // Выбор города "To"
+                      Padding(
+                        padding: const EdgeInsets.all(16.0),
+                        child: Card(
+                          elevation: 5,
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(12)),
+                          child: Padding(
+                            padding: const EdgeInsets.all(8.0),
                             child: DropdownMenu<MenuItem>(
                               initialSelection: selectedMenu2,
                               width: MediaQuery.of(context).size.width * 0.8,
@@ -203,50 +227,63 @@ class _BookingDetailState extends State<BookingDetail> {
                                   user_choice_cities["To"] = menu!.label;
                                 });
                               },
-                              dropdownMenuEntries: filteredMenuItems.map<DropdownMenuEntry<MenuItem>>((MenuItem menu) {
+                              dropdownMenuEntries: filteredMenuItems
+                                  .map<DropdownMenuEntry<MenuItem>>(
+                                      (MenuItem menu) {
                                 return DropdownMenuEntry<MenuItem>(
                                   value: menu,
                                   label: menu.label,
-                                  leadingIcon: Icon(menu.icon),
+                                  leadingIcon:
+                                      Icon(menu.icon, color: green),
                                 );
                               }).toList(),
                             ),
                           ),
-                          Padding(
-                            padding: EdgeInsets.all(16),
-                            child: ElevatedButton(
-                              onPressed: () {
-                                print(user_choice_cities);
-                              },
-                              child: const Text('Book Taxi'),
-                            ),
+                        ),
+                      ),
+                      // Разделитель
+                      Divider(
+                        color: blueGrey,
+                        height: 2,
+                        indent: 16,
+                        endIndent: 16,
+                      ),
+                      // Кнопка бронирования
+                      Padding(
+                        padding: const EdgeInsets.all(16.0),
+                        child: ElevatedButton(
+                          onPressed: () async {
+                            context
+                                .read<BookingDetailBloc>()
+                                .add(CalculatePriceEvent(user_choice_cities));
+                          },
+                          style: ElevatedButton.styleFrom(
+                            padding: const EdgeInsets.symmetric(
+                                vertical: 16.0, horizontal: 24.0),
+                            shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(8)),
+                            textStyle: const TextStyle(
+                                fontSize: 16, fontWeight: FontWeight.bold),
                           ),
-                          Padding(
-                            padding: const EdgeInsets.all(16.0),
-                            child: ElevatedButton(
-                              onPressed: () async{
-                                context.read<BookingDetailBloc>().add(CalculatePriceEvent(user_choice_cities));
-                              },
-                              child: const Text('Book Taxi'),
-                            ),
-                          ),
-                        ],
-                      );
-                    } else if (state is BookingDetailStateFailure) {
-                      return Center(child: Text(state.message));
-                    }
+                          child: const Text('Book Taxi'),
+                        ),
+                      ),
+                    ],
+                  );
+                } else if (state is BookingDetailStateFailure) {
+                  return Center(child: Text(state.message));
+                }
 
-                    return const Center(child: Text("No Data Available"));
-                  },
-                ),
-              );
-            } else if (state is BookingDetailStateFailure) {
-              return Center(child: Text(state.message));
-            }
+                return const Center(child: Text("No Data Available"));
+              },
+            ),
+          );
+        } else if (state is BookingDetailStateFailure) {
+          return Center(child: Text(state.message));
+        }
 
-            print(state);
-            return const Center(child: Text("No Data Available"));
-          },
-        );
-      }
+        return const Center(child: Text("No Data Available"));
+      },
+    );
   }
+}

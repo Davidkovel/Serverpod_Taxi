@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:taxi_app_flutter/core/utils/show_snackbar.dart';
 import 'package:taxi_app_flutter/core/widgets/loader.dart';
+import 'package:taxi_app_flutter/core/widgets/style.dart';
 import 'package:taxi_app_flutter/features/auth/presentation/bloc/auth_bloc.dart';
 import 'package:taxi_app_flutter/features/auth/presentation/bloc/auth_event.dart';
 import 'package:taxi_app_flutter/features/auth/presentation/bloc/auth_state.dart';
@@ -14,7 +15,8 @@ class RegisterConfirmationPage extends StatefulWidget {
   const RegisterConfirmationPage({super.key});
 
   @override
-  State<RegisterConfirmationPage> createState() => _RegisterConfirmationPageState();
+  State<RegisterConfirmationPage> createState() =>
+      _RegisterConfirmationPageState();
 }
 
 class _RegisterConfirmationPageState extends State<RegisterConfirmationPage> {
@@ -31,13 +33,12 @@ class _RegisterConfirmationPageState extends State<RegisterConfirmationPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Padding(
-        padding: const EdgeInsets.all(15.0),
+        padding: const EdgeInsets.all(16.0),
         child: BlocConsumer<AuthBloc, AuthState>(
           listener: (context, state) {
             if (state is AuthStateFailure) {
               showSnackbar(context, state.message);
             } else if (state is AuthStateSucess) {
-              print('fsdfsd0');
               context.go(BookingButton.route());
             }
           },
@@ -57,7 +58,7 @@ class _RegisterConfirmationPageState extends State<RegisterConfirmationPage> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     const Text(
-                      'Confirm Email.',
+                      'Confirm Email',
                       style: TextStyle(
                         fontSize: 50,
                         fontWeight: FontWeight.bold,
@@ -84,7 +85,8 @@ class _RegisterConfirmationPageState extends State<RegisterConfirmationPage> {
                           context.read<AuthBloc>().add(
                                 AuthConfirmRegistrationEvent(
                                   email: state.email,
-                                  verificationCode: verificationCodeController.text,
+                                  verificationCode:
+                                      verificationCodeController.text,
                                   password: state.password,
                                 ),
                               );
@@ -104,7 +106,12 @@ class _RegisterConfirmationPageState extends State<RegisterConfirmationPage> {
                           children: [
                             TextSpan(
                               text: 'Resend',
-                              style: Theme.of(context).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold, color: Colors.pink),
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .titleMedium
+                                  ?.copyWith(
+                                      fontWeight: FontWeight.bold,
+                                      color: pink),
                             ),
                           ],
                         ),
@@ -116,7 +123,7 @@ class _RegisterConfirmationPageState extends State<RegisterConfirmationPage> {
             }
 
             return const Center(
-              child: Text("Error."),
+              child: Text("Error please report to support team"),
             );
           },
         ),

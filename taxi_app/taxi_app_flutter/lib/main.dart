@@ -34,7 +34,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp.router(
       title: 'Taxi App',
-      theme: ThemeData(primarySwatch: Colors.blue),
+      theme: ThemeData.dark(),
       routerConfig: AppRouter.router,
     );
   }
