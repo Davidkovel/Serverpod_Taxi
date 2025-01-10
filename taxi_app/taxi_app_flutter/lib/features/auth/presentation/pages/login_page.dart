@@ -1,14 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
-import 'package:taxi_app_flutter/core/utils/show_snackbar.dart';
-import 'package:taxi_app_flutter/core/widgets/loader.dart';
+import 'package:taxi_app_flutter/core/widgets/style.dart';
 import 'package:taxi_app_flutter/features/auth/presentation/bloc/auth_bloc.dart';
 import 'package:taxi_app_flutter/features/auth/presentation/bloc/auth_event.dart';
 import 'package:taxi_app_flutter/features/auth/presentation/bloc/auth_state.dart';
 import 'package:taxi_app_flutter/features/auth/presentation/pages/register_page.dart';
 import 'package:taxi_app_flutter/features/booking/presentation/pages/booking_button.dart';
-
 
 class LoginPage extends StatefulWidget {
   static String route = '/login';
@@ -36,7 +34,7 @@ class _LoginPageState extends State<LoginPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Padding(
-        padding: const EdgeInsets.all(8.0),
+        padding: const EdgeInsets.all(16.0),
         child: BlocConsumer<AuthBloc, AuthState>(
           listener: (context, state) {
             if (state is AuthStateFailure) {
@@ -95,11 +93,19 @@ class _LoginPageState extends State<LoginPage> {
                     onTap: () {
                       context.go(RegisterPage.route());
                     },
-                    child: RichText(
-                      text: TextSpan(text: "You Don\'t have an account? Register", style: const TextStyle(color: Colors.blue, fontSize: 16)),
+                    child: Text.rich(
+                      TextSpan(
+                        text: 'You Don\'t have an account?',
+                        style: Theme.of(context).textTheme.titleMedium,
+                        children: [
+                          TextSpan(
+                            text: ' Register',
+                            style: Theme.of(context).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold, color: pink),
+                          ),
+                        ],
+                      ),
                     ),
                   )
-        
                 ],
               ),
             );

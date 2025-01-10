@@ -11,8 +11,9 @@
 // ignore_for_file: no_leading_underscores_for_library_prefixes
 import 'package:serverpod_client/serverpod_client.dart' as _i1;
 import 'dart:async' as _i2;
-import 'package:serverpod_auth_client/serverpod_auth_client.dart' as _i3;
-import 'protocol.dart' as _i4;
+import 'package:taxi_app_client/src/protocol/orders_model.dart' as _i3;
+import 'package:serverpod_auth_client/serverpod_auth_client.dart' as _i4;
+import 'protocol.dart' as _i5;
 
 /// {@category Endpoint}
 class EndpointExample extends _i1.EndpointRef {
@@ -28,12 +29,40 @@ class EndpointExample extends _i1.EndpointRef {
       );
 }
 
+/// {@category Endpoint}
+class EndpointOrders extends _i1.EndpointRef {
+  EndpointOrders(_i1.EndpointCaller caller) : super(caller);
+
+  @override
+  String get name => 'orders';
+
+  _i2.Future<void> createOrder(_i3.Orders orders) =>
+      caller.callServerEndpoint<void>(
+        'orders',
+        'createOrder',
+        {'orders': orders},
+      );
+
+  _i2.Future<List<_i3.Orders>> listOrders() =>
+      caller.callServerEndpoint<List<_i3.Orders>>(
+        'orders',
+        'listOrders',
+        {},
+      );
+
+  _i2.Future<void> deleteOrder(int orderId) => caller.callServerEndpoint<void>(
+        'orders',
+        'deleteOrder',
+        {'orderId': orderId},
+      );
+}
+
 class Modules {
   Modules(Client client) {
-    auth = _i3.Caller(client);
+    auth = _i4.Caller(client);
   }
 
-  late final _i3.Caller auth;
+  late final _i4.Caller auth;
 }
 
 class Client extends _i1.ServerpodClientShared {
@@ -52,7 +81,7 @@ class Client extends _i1.ServerpodClientShared {
     bool? disconnectStreamsOnLostInternetConnection,
   }) : super(
           host,
-          _i4.Protocol(),
+          _i5.Protocol(),
           securityContext: securityContext,
           authenticationKeyManager: authenticationKeyManager,
           streamingConnectionTimeout: streamingConnectionTimeout,
@@ -63,15 +92,21 @@ class Client extends _i1.ServerpodClientShared {
               disconnectStreamsOnLostInternetConnection,
         ) {
     example = EndpointExample(this);
+    orders = EndpointOrders(this);
     modules = Modules(this);
   }
 
   late final EndpointExample example;
 
+  late final EndpointOrders orders;
+
   late final Modules modules;
 
   @override
-  Map<String, _i1.EndpointRef> get endpointRefLookup => {'example': example};
+  Map<String, _i1.EndpointRef> get endpointRefLookup => {
+        'example': example,
+        'orders': orders,
+      };
 
   @override
   Map<String, _i1.ModuleEndpointCaller> get moduleLookup =>

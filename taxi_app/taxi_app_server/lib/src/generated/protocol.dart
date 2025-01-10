@@ -13,7 +13,10 @@ import 'package:serverpod/serverpod.dart' as _i1;
 import 'package:serverpod/protocol.dart' as _i2;
 import 'package:serverpod_auth_server/serverpod_auth_server.dart' as _i3;
 import 'example.dart' as _i4;
+import 'orders_model.dart' as _i5;
+import 'package:taxi_app_server/src/generated/orders_model.dart' as _i6;
 export 'example.dart';
+export 'orders_model.dart';
 
 class Protocol extends _i1.SerializationManagerServer {
   Protocol._();
@@ -23,6 +26,79 @@ class Protocol extends _i1.SerializationManagerServer {
   static final Protocol _instance = Protocol._();
 
   static final List<_i2.TableDefinition> targetTableDefinitions = [
+    _i2.TableDefinition(
+      name: 'orders',
+      dartName: 'Orders',
+      schema: 'public',
+      module: 'taxi_app',
+      columns: [
+        _i2.ColumnDefinition(
+          name: 'id',
+          columnType: _i2.ColumnType.bigint,
+          isNullable: false,
+          dartType: 'int?',
+          columnDefault: 'nextval(\'orders_id_seq\'::regclass)',
+        ),
+        _i2.ColumnDefinition(
+          name: 'passengerId',
+          columnType: _i2.ColumnType.bigint,
+          isNullable: false,
+          dartType: 'int',
+        ),
+        _i2.ColumnDefinition(
+          name: 'fromAddress',
+          columnType: _i2.ColumnType.text,
+          isNullable: false,
+          dartType: 'String',
+        ),
+        _i2.ColumnDefinition(
+          name: 'toAddress',
+          columnType: _i2.ColumnType.text,
+          isNullable: false,
+          dartType: 'String',
+        ),
+        _i2.ColumnDefinition(
+          name: 'status',
+          columnType: _i2.ColumnType.text,
+          isNullable: false,
+          dartType: 'String',
+        ),
+        _i2.ColumnDefinition(
+          name: 'price',
+          columnType: _i2.ColumnType.bigint,
+          isNullable: false,
+          dartType: 'int',
+        ),
+      ],
+      foreignKeys: [
+        _i2.ForeignKeyDefinition(
+          constraintName: 'orders_fk_0',
+          columns: ['passengerId'],
+          referenceTable: 'serverpod_user_info',
+          referenceTableSchema: 'public',
+          referenceColumns: ['id'],
+          onUpdate: _i2.ForeignKeyAction.noAction,
+          onDelete: _i2.ForeignKeyAction.noAction,
+          matchType: null,
+        )
+      ],
+      indexes: [
+        _i2.IndexDefinition(
+          indexName: 'orders_pkey',
+          tableSpace: null,
+          elements: [
+            _i2.IndexElementDefinition(
+              type: _i2.IndexElementDefinitionType.column,
+              definition: 'id',
+            )
+          ],
+          type: 'btree',
+          isUnique: true,
+          isPrimary: true,
+        )
+      ],
+      managed: true,
+    ),
     ..._i3.Protocol.targetTableDefinitions,
     ..._i2.Protocol.targetTableDefinitions,
   ];
@@ -36,8 +112,18 @@ class Protocol extends _i1.SerializationManagerServer {
     if (t == _i4.Example) {
       return _i4.Example.fromJson(data) as T;
     }
+    if (t == _i5.Orders) {
+      return _i5.Orders.fromJson(data) as T;
+    }
     if (t == _i1.getType<_i4.Example?>()) {
       return (data != null ? _i4.Example.fromJson(data) : null) as T;
+    }
+    if (t == _i1.getType<_i5.Orders?>()) {
+      return (data != null ? _i5.Orders.fromJson(data) : null) as T;
+    }
+    if (t == List<_i6.Orders>) {
+      return (data as List).map((e) => deserialize<_i6.Orders>(e)).toList()
+          as dynamic;
     }
     try {
       return _i3.Protocol().deserialize<T>(data, t);
@@ -54,6 +140,9 @@ class Protocol extends _i1.SerializationManagerServer {
     if (className != null) return className;
     if (data is _i4.Example) {
       return 'Example';
+    }
+    if (data is _i5.Orders) {
+      return 'Orders';
     }
     className = _i2.Protocol().getClassNameForObject(data);
     if (className != null) {
@@ -74,6 +163,9 @@ class Protocol extends _i1.SerializationManagerServer {
     }
     if (dataClassName == 'Example') {
       return deserialize<_i4.Example>(data['data']);
+    }
+    if (dataClassName == 'Orders') {
+      return deserialize<_i5.Orders>(data['data']);
     }
     if (dataClassName.startsWith('serverpod.')) {
       data['className'] = dataClassName.substring(10);
@@ -99,6 +191,10 @@ class Protocol extends _i1.SerializationManagerServer {
       if (table != null) {
         return table;
       }
+    }
+    switch (t) {
+      case _i5.Orders:
+        return _i5.Orders.t;
     }
     return null;
   }
