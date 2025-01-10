@@ -235,7 +235,7 @@ class _BookingDetailState extends State<BookingDetail> {
                                   value: menu,
                                   label: menu.label,
                                   leadingIcon:
-                                      Icon(menu.icon, color: green),
+                                      Icon(menu.icon, color: blue),
                                 );
                               }).toList(),
                             ),
